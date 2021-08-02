@@ -2,20 +2,33 @@ document.querySelector("#start").onclick = start;
 
 function start(){
     showQuestion();
+    const startButton = document.querySelector("#start");
+    startButton.disabled = true;
+    const jumpButton = document.querySelector("#jump");
+    jumpButton.disabled = false;
+    jumpButton.addEventListener('click' , showQuestion);
+}
+
+function checkValue(x , y) {
+    if(x===y){
+        alert(true);
+    }
+    alert(false);
 }
 
 function showQuestion(){
     let x = Math.random();
-    let zaribs , q;
+    let zaribs , q , answer;
     if (x<0.25){
         zaribs = createZaribs(3);
-        let button = document.querySelector("#start");
         q = createQA(zaribs);
         if(q!=null){
             document.querySelector("#question1").innerHTML = q;
         } else {
             showQuestion();
         }
+        let correct = showOptions(optionsForQA(answerQA(zaribs)));
+        
     } else if(x<0.5){
         zaribs = createZaribs(2);
         q = createQE(zaribs);
@@ -27,7 +40,6 @@ function showQuestion(){
     } else if(x<0.75){
         zaribs = createZaribsForC();
         q = createQC(zaribs);
-        console.log(answerQC(zaribs));
         if(q!=null) {
         document.querySelector("#question1").innerHTML = "sqrt("+q+")";
         } else {
@@ -232,7 +244,42 @@ function createZaribsForC(){
 }
 
 function answerQA(array){
-    return (array[2]-array[1])/array[0];
+    let s = array[2]-array[1];
+    let m = array[0];
+    let g = gcd(s,m);
+    if(m<0){
+        s *= -1;
+        m *= -1;
+    }
+    if(s % m === 0){
+        return s/m;
+    } else if(g !== 1){
+        s /= g;
+        m /= g;
+    }
+    return [s,m];
+}
+
+function optionsForQA(answer){
+    let opt1 , opt2 , opt3 , opt4;
+    if(typeof answer === 'number'){
+        opt1 = answer;
+        opt2 = answer*-1;
+        opt3 = answer+1;
+        opt4 = answer-1;
+
+    } else {
+        opt1 = answer[0]+"/"+answer[1];
+        opt2 = (answer[0]*-1)+"/"+answer[1];
+        if (answer[0]<0){
+            opt3 = answer[1]+"/"+(answer[0]*-1);
+            opt4 = (answer[1]*-1)+"/"+(answer[0]*-1);
+        } else {
+            opt3 = answer[1]+"/"+answer[0];
+            opt4 = (answer[1]*-1)+"/"+answer[0];
+        }
+    }
+    return [opt1 , opt2 , opt3 , opt4];
 }
 
 function answerQB(array){
@@ -248,4 +295,45 @@ function answerQD(array){}
 
 function answerQE(array){
     return array;
+}
+
+function gcd(x,y){
+    if ((typeof x !== 'number') || (typeof y !== 'number'))
+        return false;
+    x = Math.abs(x);
+    y = Math.abs(y);
+    while(y) {
+        let t = y;
+        y = x % y;
+        x = t;
+    }
+    return x;
+}
+
+function showOptions(array){
+    let x = Math.round(Math.random()*3);
+    let correct = x+1;
+    let options = document.querySelectorAll(".opt");
+    if(x===0){
+        options[0].innerHTML=array[0];
+        options[1].innerHTML=array[1];
+        options[2].innerHTML=array[2];
+        options[3].innerHTML=array[3];
+    } else if(x===1){
+        options[1].innerHTML=array[0];
+        options[0].innerHTML=array[1];
+        options[2].innerHTML=array[2];
+        options[3].innerHTML=array[3];
+    } else if(x===2){
+        options[2].innerHTML=array[0];
+        options[0].innerHTML=array[1];
+        options[1].innerHTML=array[2];
+        options[3].innerHTML=array[3];
+    } else {
+        options[3].innerHTML=array[0];
+        options[0].innerHTML=array[1];
+        options[1].innerHTML=array[2];
+        options[2].innerHTML=array[3];
+    }
+    return correct;
 }
