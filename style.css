@@ -1,11 +1,14 @@
-
-#sorat1{
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    border-bottom-color: black;
+.flex-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
-#sorat2{
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    border-bottom-color: black;
+.flex-item {
+    text-align: center;
+    margin: 5px;
+}
+#sqrtQ , #sqrtA{
+    border-top-style: solid;
+    border-top-width: 1px;
 }

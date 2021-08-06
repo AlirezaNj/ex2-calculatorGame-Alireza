@@ -9,19 +9,30 @@
     <h2>بازی محاسبات ساده ریاضی</h2>
     <input type="button" id="start" value="شروع!" >
     <div id="question1"></div>
-
-    <form id="ans">
-        <button id="ans1" name="answer" class="option" value="1">
-        <label for="ans1" class="opt">1</label><br>
-        <button id="ans2" name="answer" class="option" value="2">
-        <label for="ans2" class="opt">2</label><br>
-        <button id="ans3" name="answer" class="option" value="3">
-        <label for="ans3" class="opt">3</label><br>
-        <button id="ans4" name="answer" class="option" value="4">
-        <label for="ans4" class="opt">4</label><br>
-    </form>
+    
+    <button id="ans1" class="option" value="1" onclick="getInputAnswer(this.value)">?</button>
+    <button id="ans2" class="option" value="2" onclick="getInputAnswer(this.value)">?</button>
+    <button id="ans3" class="option" value="3" onclick="getInputAnswer(this.value)">?</button>
+    <button id="ans4" class="option" value="4" onclick="getInputAnswer(this.value)">?</button><br>
 
     <button id="jump" disabled>رد کردن</button>
+
+    <div id="result">
+        <div>
+            <span>پاسخ های درست : </span>
+            <span id="corrects">0</span>
+        </div>
+        <div>
+            <span>پاسخ های غلط : </span>
+            <span id="wrongs">0</span>
+        </div>
+        <div>
+            <span>پاسخ داده نشده : </span>
+            <span id="empties">0</span>
+        </div>
+    </div>
+
+    <p id="demo">100s</p>
 
     <div id="check"></div>
 <script type="text/javascript" src="main.js"></script>
