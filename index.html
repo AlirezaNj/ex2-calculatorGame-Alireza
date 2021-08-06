@@ -1,40 +1,102 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>بازی محاسبات ریاضی</title>
     <link type="text/css" rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
 </head>
-<body style="text-align: center">
-    <h2>بازی محاسبات ساده ریاضی</h2>
-    <input type="button" id="start" value="شروع!" >
-    <div id="question1"></div>
 
-    <button id="ans1" class="option" value="1" onclick="getInputAnswer(this.value)">?</button>
-    <button id="ans2" class="option" value="2" onclick="getInputAnswer(this.value)">?</button>
-    <button id="ans3" class="option" value="3" onclick="getInputAnswer(this.value)">?</button>
-    <button id="ans4" class="option" value="4" onclick="getInputAnswer(this.value)">?</button><br>
-
-    <button id="jump" disabled>رد کردن</button>
-
-    <div id="result">
-        <div>
-            <span>پاسخ های درست : </span>
-            <span id="corrects">0</span>
+<body class="text-center">
+    <header>
+        <div class="row rounded text-center">
+            <div class="col-2"></div>
+            <div class="col-8 title rounded mt-3 p-3 shadow">
+                <h1>بازی محاسبات ساده ریاضی</h1><br>
+                <p>!!!سرعت محاسباتت رو به موشک برسون</p>
+            </div>
+            <div class="col-2"></div>
         </div>
-        <div>
-            <span>پاسخ های غلط : </span>
-            <span id="wrongs">0</span>
-        </div>
-        <div>
-            <span>پاسخ داده نشده : </span>
-            <span id="empties">0</span>
-        </div>
-    </div>
+    </header>
 
-    <p id="demo">100s</p>
+    <section>
+        <div class="row rounded text-center">
+            <div class="col-2"></div>
+            <div class="col-8 description rounded mt-3 p-3 shadow text-light">
+                <p>برای شروع روی  "شروع  بازی" کلیک کن</p>
+                <p>هر جواب درست 3 امتیاز مثبت و هر جواب غلط 1 امتیاز منفی داره</p>
+            </div>
+            <div class="col-2"></div>
+        </div>
+    </section>
 
-    <div id="check"></div>
+    <section class="main">
+        <button id="start" class="btn btn-dark m-3 shadow">شروع بازی</button>
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-4 pl-0 ml-0">
+                <div id="question1" class="shadow border border-dark rounded py-5">سوال</div>
+            </div>
+            <div class="col-4 pr-0 mr-0">
+                <div class="row py-4 w-100">
+                    <div class="col-2"></div>
+                    <div class="col-2">
+                        <button id="ans1" class="option btn btn-outline-dark shadow" value="1" onclick="getInputAnswer(this.value)" disabled>?</button>
+                    </div>
+                    <div class="col-2">
+                        <button id="ans2" class="option btn btn-outline-dark shadow" value="2" onclick="getInputAnswer(this.value)" disabled>?</button>
+                    </div>
+                    <div class="col-2">
+                        <button id="ans3" class="option btn btn-outline-dark shadow" value="3" onclick="getInputAnswer(this.value)" disabled>?</button>
+                    </div>
+                    <div class="col-2">
+                        <button id="ans4" class="option btn btn-outline-dark shadow" value="4" onclick="getInputAnswer(this.value)" disabled>?</button>
+                    </div>
+                    <div class="col-2"></div>
+                </div>
+            </div>
+            <div class="col-2"></div>
+        </div>
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-4 text-center pl-0">
+                <button id="jump" class="btn btn-warning shadow mt-3" disabled>رد کردن سوال</button>
+                <div class="border border-warning shadow p-3 my-3">
+                    <span>زمان : </span>
+                    <span id="demo">100 ثانیه</span>
+                </div>
+
+            </div>
+            <div class="col-4 py-2 pr-0 mr-0">
+                <div class="bg-success text-light mt-2 rounded shadow p-1">
+                    <span>پاسخ های درست : </span>
+                    <span id="corrects">0</span>
+                </div>
+                <div class="bg-danger text-light mt-2 rounded shadow p-1">
+                    <span>پاسخ های غلط : </span>
+                    <span id="wrongs">0</span>
+                </div>
+                <div class="bg-secondary text-light mt-2 rounded shadow p-1">
+                    <span>پاسخ داده نشده : </span>
+                    <span id="empties">0</span>
+                </div>
+            </div>
+            <div class="col-2"></div>
+        </div>
+        <div class="row">
+            <div class="col-2"></div>
+            <div id="result" class="col-8 mt-3 p-2 bg-warning rounded shadow">
+                <span>امتیاز شما : </span>
+                <span id="score">0</span>
+            </div>
+            <div class="col-2"></div>
+        </div>
+    </section>
 <script type="text/javascript" src="main.js"></script>
 </body>
 </html>

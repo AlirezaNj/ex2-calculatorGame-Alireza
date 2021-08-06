@@ -6,6 +6,10 @@ function start(){
     showQuestion();
     const startButton = document.querySelector("#start");
     startButton.disabled = true;
+    const optionButtons = document.querySelectorAll(".option");
+    for (let x of optionButtons) {
+        x.disabled = false;
+    }
     const jumpButton = document.querySelector("#jump");
     jumpButton.disabled = false;
     jumpButton.addEventListener('click' , showQuestionWithJump);
@@ -210,7 +214,7 @@ function createQD(zaribs){
 }   // ax^2+bx+c=d
 
 function createQE(zaribs){
-    let str2 = "x^2" , str1 = "" , str0 = "" , operand1 = "" , operand2 = "";
+    let str2 = "x<sup>2</sup>" , str1 = "" , str0 = "" , operand1 = "" , operand2 = "";
     let zaribX = (zaribs[0]+zaribs[1])*(-1);
     let zarib0 = zaribs[0]*zaribs[1];
     if(zaribX>0){
@@ -407,10 +411,10 @@ function countdownTimer(){
         let now = new Date().getTime();
         let distance = countDownDate - now;
         let seconds = Math.floor((distance % (1000 * 60 * 60)) / 1000);
-        document.getElementById("demo").innerHTML =seconds + "s ";
+        document.getElementById("demo").innerHTML =seconds+" ثانیه ";
         if (distance < 0) {
             clearInterval(x);
-            document.getElementById("demo").innerHTML = "EXPIRED";
+            document.getElementById("demo").innerHTML = "زمان شما به پایان رسید";
             finish();
         }
     }, 1000);
@@ -419,12 +423,18 @@ function countdownTimer(){
 function finish(){
     let score = (correctAnswers*3)-(wrongAnswers);
     document.querySelector("#start").disabled = false;
+    document.querySelector("#jump").disabled = true;
+    document.querySelector("#question1").innerHTML = "سوال"
     let options = document.querySelectorAll(".option");
     for (let option of options) {
         option.innerHTML="?";
     }
+    const optionButtons = document.querySelectorAll(".option");
+    for (let x of optionButtons) {
+        x.disabled = true;
+    }
     correctAnswers = 0;
     wrongAnswers = 0;
     emptyAnswers = 0;
-    alert("your score is : "+score)
+    document.querySelector("#score").innerHTML = score.toString();
 }

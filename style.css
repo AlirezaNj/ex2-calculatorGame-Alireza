@@ -1,3 +1,10 @@
+@font-face {
+    font-family: Vazir;
+    src: url('./fonts/Vazir.ttf');
+}
+*{
+    font-family: Vazir, serif;
+}
 .flex-container{
     display: flex;
     flex-direction: row;
@@ -12,3 +19,14 @@
     border-top-style: solid;
     border-top-width: 1px;
 }
+.title{
+    background-color: #ffc107;
+}
+.description{
+    background-color: gray;
+}
+/*
+#jump{
+    background-color: orangered;
+    border-color: orangered;
+}*/
