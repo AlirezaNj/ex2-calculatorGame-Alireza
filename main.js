@@ -402,7 +402,7 @@ function showOptions(array){
 }
 
 function countdownTimer(){
-    let countDownDate = new Date().getTime()+10100;
+    let countDownDate = new Date().getTime()+101000;
     let x = setInterval(function() {
         let now = new Date().getTime();
         let distance = countDownDate - now;
