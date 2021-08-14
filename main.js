@@ -1,6 +1,7 @@
 document.querySelector("#start").onclick = start;
 let correctAnswers = 0, wrongAnswers = 0, emptyAnswers = 0;
 
+
 function start(){
     countdownTimer();
     timeBarProgress();
