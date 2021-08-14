@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <title>بازی محاسبات ریاضی</title>
@@ -12,91 +12,107 @@
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
 </head>
 
-<body class="text-center">
+<body class="text-center container">
+    <audio id="levelSound" src="./sounds/Monkeys-Spinning-Monkeys.mp3"></audio>
+    <audio id="losingSound" src="./sounds/losing.wav"></audio>
     <header>
-        <div class="row rounded text-center">
-            <div class="col-2"></div>
-            <div class="col-8 title rounded mt-3 p-3 shadow">
-                <h1>بازی محاسبات ساده ریاضی</h1><br>
-                <p>!!!سرعت محاسباتت رو به موشک برسون</p>
+        <div class="container">
+            <div class="row">
+                <div class="rounded my-3 p-2 shadow w-100" id="title">
+                    <h2>بازی محاسبات ساده ریاضی</h2>
+                </div>
             </div>
-            <div class="col-2"></div>
         </div>
     </header>
 
     <section>
-        <div class="row rounded text-center">
-            <div class="col-2"></div>
-            <div class="col-8 description rounded mt-3 p-3 shadow text-light">
-                <p>برای شروع روی  "شروع  بازی" کلیک کن</p>
-                <p>هر جواب درست 3 امتیاز مثبت و هر جواب غلط 1 امتیاز منفی داره</p>
-            </div>
-            <div class="col-2"></div>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            فقط 100 ثانیه فرصت داری، اگه درست جواب بدی به تایمت اضافه میشه و اگه غلط جواب بدی از تایمت کم میشه
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+            هر جواب درست 3 امتیاز مثبت و هر جواب غلط 1 امتیاز منفی داره
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
     </section>
 
     <section class="main">
         <button id="start" class="btn btn-dark m-3 shadow">شروع بازی</button>
-        <div class="row">
-            <div class="col-2"></div>
-            <div class="col-4 pl-0 ml-0">
-                <div id="question1" class="shadow border border-dark rounded py-5">سوال</div>
-            </div>
-            <div class="col-4 pr-0 mr-0">
-                <div class="row py-4 w-100">
-                    <div class="col-2"></div>
-                    <div class="col-2">
-                        <button id="ans1" class="option btn btn-outline-dark shadow" value="1" onclick="getInputAnswer(this.value)" disabled>?</button>
+        <button id="jump" class="btn btn-warning m-3 shadow" disabled>رد کردن سوال</button>
+        <div class="container">
+            <div class="row" >
+                <div id="question-container" class="col-md-6 shadow border border-dark rounded" style="height: 150px"  dir="ltr">
+                    <div id="question1" class="py-4">سوال</div>
+                </div>
+                <div id="options-container" class="col-md-6 py-2" style="height: 150px"  dir="ltr">
+                    <div id="options-1-2-container" class="row h-50">
+                        <div class="col-6">
+                            <button id="ans1" class="option btn btn-outline-dark shadow w-100" value="1" onclick="getInputAnswer(this.value)" disabled>گزینه 1</button>
+                        </div>
+                        <div class="col-6">
+                            <button id="ans2" class="option btn btn-outline-dark shadow w-100" value="2" onclick="getInputAnswer(this.value)" disabled>گزینه 2</button>
+                        </div>
                     </div>
-                    <div class="col-2">
-                        <button id="ans2" class="option btn btn-outline-dark shadow" value="2" onclick="getInputAnswer(this.value)" disabled>?</button>
+                    <div id="options-3-4-container" class="row h-50">
+                        <div class="col-6">
+                            <button id="ans3" class="option btn btn-outline-dark shadow w-100" value="3" onclick="getInputAnswer(this.value)" disabled>گزینه 3</button>
+                        </div>
+                        <div class="col-6">
+                            <button id="ans4" class="option btn btn-outline-dark shadow w-100" value="4" onclick="getInputAnswer(this.value)" disabled>گزینه 4</button>
+                        </div>
                     </div>
-                    <div class="col-2">
-                        <button id="ans3" class="option btn btn-outline-dark shadow" value="3" onclick="getInputAnswer(this.value)" disabled>?</button>
-                    </div>
-                    <div class="col-2">
-                        <button id="ans4" class="option btn btn-outline-dark shadow" value="4" onclick="getInputAnswer(this.value)" disabled>?</button>
-                    </div>
-                    <div class="col-2"></div>
                 </div>
             </div>
-            <div class="col-2"></div>
         </div>
-        <div class="row">
-            <div class="col-2"></div>
-            <div class="col-4 text-center pl-0">
-                <button id="jump" class="btn btn-warning shadow mt-3" disabled>رد کردن سوال</button>
-                <div class="border border-warning shadow p-3 my-3">
-                    <span>زمان : </span>
-                    <span id="demo">100 ثانیه</span>
-                </div>
-
-            </div>
-            <div class="col-4 py-2 pr-0 mr-0">
-                <div class="bg-success text-light mt-2 rounded shadow p-1">
-                    <span>پاسخ های درست : </span>
-                    <span id="corrects">0</span>
-                </div>
-                <div class="bg-danger text-light mt-2 rounded shadow p-1">
-                    <span>پاسخ های غلط : </span>
-                    <span id="wrongs">0</span>
-                </div>
-                <div class="bg-secondary text-light mt-2 rounded shadow p-1">
-                    <span>پاسخ داده نشده : </span>
-                    <span id="empties">0</span>
+        <div class="container">
+            <div class="row">
+                <div class="col px-0">
+                    <div class="border border-warning shadow p-2 my-3"  style="height: 100px">
+                        <span>زمان : </span>
+                        <span id="demo">100 ثانیه</span>
+                        <div id="myProgress" class="mt-3">
+                            <div id="myBar"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-2"></div>
-        </div>
-        <div class="row">
-            <div class="col-2"></div>
-            <div id="result" class="col-8 mt-3 p-2 bg-warning rounded shadow">
-                <span>امتیاز شما : </span>
-                <span id="score">0</span>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row my-2">
+                        <div class="col-4">
+                            <div class="py-2 bg-success text-light rounded shadow">
+                                <span>درست : </span>
+                                <span id="corrects">0</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="py-2 bg-danger text-light rounded shadow ">
+                                <span>غلط : </span>
+                                <span id="wrongs">0</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="py-2 bg-secondary text-light rounded shadow">
+                                <span>نزده : </span>
+                                <span id="empties">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div id="result" class="py-2 my-2 bg-warning rounded shadow">
+                        <span>امتیاز شما : </span>
+                        <span id="score">0</span>
+                    </div>
+                </div>
             </div>
-            <div class="col-2"></div>
         </div>
     </section>
+
 <script type="text/javascript" src="main.js"></script>
 </body>
 </html>

@@ -19,14 +19,12 @@
     border-top-style: solid;
     border-top-width: 1px;
 }
-.title{
+#title{
     background-color: #ffc107;
 }
 .description{
     background-color: gray;
 }
-/*
-#jump{
-    background-color: orangered;
-    border-color: orangered;
-}*/
+.option{
+    height: 60px;
+}

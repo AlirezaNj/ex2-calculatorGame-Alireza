@@ -3,6 +3,7 @@ let correctAnswers = 0, wrongAnswers = 0, emptyAnswers = 0;
 
 function start(){
     countdownTimer();
+    timeBarProgress();
     showQuestion();
     const startButton = document.querySelector("#start");
     startButton.disabled = true;
@@ -13,6 +14,7 @@ function start(){
     const jumpButton = document.querySelector("#jump");
     jumpButton.disabled = false;
     jumpButton.addEventListener('click' , showQuestionWithJump);
+    document.querySelector("#score").innerHTML='0';
 }
 
 function showQuestionWithJump(){
@@ -46,6 +48,7 @@ function showQA(){
         document.querySelector("#question1").innerHTML = q;
     } else {
         showQuestion();
+        return;
     }
     let correct = showOptions(optionsForQAAndQB(answerQA(zaribs))); // showOptions function also return the correct option
     localStorage.setItem("correct" , correct.toString());
@@ -57,30 +60,35 @@ function showQB(){
         "<div class=\"flex-container\">\n" +
         "        <div class=\"flex-item\" id=\"variables\">\n" +
         "            <div id=\"numerator1\"></div>\n" +
-        "            <hr>\n" +
+        "            <hr style='border-top: 2px solid black;'>\n" +
         "            <div id=\"denominator1\"></div>\n" +
         "        </div>\n" +
         "        <div class=\"flex-item\" id=\"equal\">=</div>\n" +
         "        <div class=\"flex-item\" id=\"numbers\">\n" +
         "            <div id=\"numerator2\"></div>\n" +
-        "            <hr>\n" +
+        "            <hr id=\"khat2\" style='border-top: 2px solid black;'>\n" +
         "            <div id=\"denominator2\"></div>\n" +
         "        </div>\n" +
         "    </div>"
+    if(zaribs[0]===0 && zaribs[2]===0){
+        showQuestion();
+        return ;
+    }
     let sorat = createQB(zaribs.slice(0,2));
     let makhraj = createQB(zaribs.slice(2,4));
     let javab = createQBJ(zaribs.slice(4,6));
-    if(javab ===null){
+    document.querySelector("#numerator1").innerHTML = sorat;
+    document.querySelector("#denominator1").innerHTML = makhraj;
+    if(typeof javab==="number"){
+        document.querySelector("#numerator2").innerHTML = javab;
+        document.getElementById("khat2").style.display = "none";
+    } else if(javab === null){
         showQuestion();
-    } else{
-        document.querySelector("#numerator1").innerHTML = sorat;
-        document.querySelector("#denominator1").innerHTML = makhraj;
-        if(javab===0){
-            document.querySelector("#numerator2").innerHTML = "0";
-        } else {
-            document.querySelector("#numerator2").innerHTML = javab[0];
-            document.querySelector("#denominator2").innerHTML = javab[1];
-        }
+        return;
+    } else {
+        document.getElementById("khat2").style.display = "block";
+        document.querySelector("#numerator2").innerHTML = javab[0];
+        document.querySelector("#denominator2").innerHTML = javab[1];
     }
     let correct = showOptions(optionsForQAAndQB(answerQB(zaribs))); // showOptions function also return the correct option
     localStorage.setItem("correct" , correct.toString());
@@ -94,6 +102,7 @@ function showQC(){
         document.querySelector("#sqrtQ").innerHTML = q;
     } else {
         showQuestion();
+        return;
     }
     let correct = showOptions(optionsForQC(answerQC(zaribs))); // showOptions function also return the correct option
     localStorage.setItem("correct" , correct.toString());
@@ -106,6 +115,7 @@ function showQE(){
         document.querySelector("#question1").innerHTML = q;
     } else {
         showQuestion();
+        return;
     }
     let correct = showOptions(optionsForQE(answerQE(zaribs))); // showOptions function also return the correct option
     localStorage.setItem("correct" , correct.toString());
@@ -152,7 +162,9 @@ function createQB(zaribs) {
         operand = " - ";
         str0 = zaribs[1]*(-1);
     } else if(zaribs[1]>0){
-        operand = " + ";
+        if(zaribs[0]!== 0){
+            operand = " + ";
+        }
         str0 = zaribs[1];
     }
     return str1 + operand + str0;
@@ -164,9 +176,8 @@ function createQBJ(zaribs){
     } else if(zaribs[0]===0){
         return 0;
     } else {
-        return zaribs;
+        return checkFraction(zaribs[0],zaribs[1]);
     }
-
 }    // e/f
 
 function createQC(zaribs){
@@ -217,6 +228,9 @@ function createQE(zaribs){
     let str2 = "x<sup>2</sup>" , str1 = "" , str0 = "" , operand1 = "" , operand2 = "";
     let zaribX = (zaribs[0]+zaribs[1])*(-1);
     let zarib0 = zaribs[0]*zaribs[1];
+    if(zaribX ===0 && zarib0 ===0){
+        return null;
+    }
     if(zaribX>0){
         operand1 = " + ";
         str1 = checkPowerOneZarib(zaribX);
@@ -282,57 +296,47 @@ function createZaribsForC(){
 function answerQA(array){
     let s = array[2]-array[1];
     let m = array[0];
-    let g = gcd(s,m);
-    if(m<0){
-        s *= -1;
-        m *= -1;
-    }
-    if(s % m === 0){
-        return s/m;
-    } else if(g !== 1){
-        s /= g;
-        m /= g;
-    }
-    return [s,m];
+    return checkFraction(s,m);
 }
 
 function optionsForQAAndQB(answer){
     let opt1 , opt2 , opt3 , opt4;
     if(typeof answer === 'number'){
         opt1 = answer;
-        opt2 = answer*-1;
+        if(answer === 0){
+            opt2 = 2;
+        } else {
+            opt2 = answer*-1;
+        }
         opt3 = answer+1;
         opt4 = answer-1;
-
+        return [opt1 , opt2 , opt3 , opt4];
     } else {
-        opt1 = answer[0]+"/"+answer[1];
-        opt2 = (answer[0]*-1)+"/"+answer[1];
+        opt1 = checkFraction(answer[0] , answer[1]);
+        opt2 = checkFraction((answer[0]*-1) , answer[1]);
         if (answer[0]<0){
-            opt3 = answer[1]+"/"+(answer[0]*-1);
-            opt4 = (answer[1]*-1)+"/"+(answer[0]*-1);
+            opt3 = checkFraction(answer[1] , (answer[0]*-1));
+            opt4 = checkFraction((answer[1]*-1) , (answer[0]*-1));
         } else {
-            opt3 = answer[1]+"/"+answer[0];
-            opt4 = (answer[1]*-1)+"/"+answer[0];
+            opt3 = checkFraction(answer[1] , answer[0]);
+            opt4 = checkFraction((answer[1]*-1) , answer[0]);
         }
     }
-    return [opt1 , opt2 , opt3 , opt4];
+    return [fractionOption(opt1) , fractionOption(opt2) ,fractionOption(opt3) ,fractionOption(opt4) ,]
+}
+
+function fractionOption(opt){
+    if(typeof opt === "number"){
+        return opt;
+    } else {
+        return opt[0]+"/"+opt[1];
+    }
 }
 
 function answerQB(array){
     let s = array[3]*array[4]-array[1]*array[5];
     let m = array[0]*array[5]-array[2]*array[4];
-    let g = gcd(s,m);
-    if(m<0){
-        s *= -1;
-        m *= -1;
-    }
-    if(s % m === 0){
-        return s/m;
-    } else if(g !== 1){
-        s /= g;
-        m /= g;
-    }
-    return [s,m];
+    return checkFraction(s,m);
 }
 
 function answerQC(array){
@@ -343,8 +347,12 @@ function answerQC(array){
 function optionsForQC(answer){
     let opt1 , opt2 , opt3 , opt4;
     opt1 = answer[0]+ "&radic;<span id=\"sqrtA\">"+answer[1]+"</span>";
-    opt2 = answer[1]+ "&radic;<span id=\"sqrtA\">"+answer[0]+"</span>";
-    opt3 = (answer[0]-1) + "&radic;<span id=\"sqrtA\">"+answer[1]+"</span>";
+    if(answer[0] === answer[1]){
+        opt2 = (answer[1]+2)+ "&radic;<span id=\"sqrtA\">"+answer[0]+"</span>";
+    } else {
+        opt2 = answer[1]+ "&radic;<span id=\"sqrtA\">"+answer[0]+"</span>";
+    }
+    opt3 = (answer[0]+1) + "&radic;<span id=\"sqrtA\">"+answer[1]+"</span>";
     opt4 = answer[0]+ "&radic;<span id=\"sqrtA\">"+(answer[1]+1)+"</span>";
     return [opt1 , opt2 , opt3 , opt4];
 }
@@ -357,10 +365,28 @@ function answerQE(array){
 
 function optionsForQE(answer){
     let opt1 , opt2 , opt3 , opt4;
-    opt1 = "x<sub>1</sub>="+answer[0]+"<br>"+"x<sub>2</sub>="+answer[1];
-    opt2 = "x<sub>1</sub>="+(answer[0]*-1)+"<br>"+"x<sub>2</sub>="+answer[1];
-    opt3 = "x<sub>1</sub>="+answer[0]+"<br>"+"x<sub>2</sub>="+(answer[1]*-1);
-    opt4 = "x<sub>1</sub>="+(answer[0]*-1)+"<br>"+"x<sub>2</sub>="+(answer[1]*-1);
+    opt1 = "x<sub>1</sub> = "+answer[0]+"<br>"+"x<sub>2</sub> = "+answer[1];
+    if(answer[0] === 0) {
+        opt2 = "x<sub>1</sub> = " + (answer[0] - 1) + "<br>" + "x<sub>2</sub> = " + answer[1];
+        opt3 = "x<sub>1</sub> = "+answer[0]+"<br>"+"x<sub>2</sub> = "+(answer[1]*-1);
+        opt4 = "x<sub>1</sub> = " + (answer[0] + 1) + "<br>" + "x<sub>2</sub> = " + (answer[1] * -1);
+    }else if(answer[1] === 0){
+        opt2 = "x<sub>1</sub> = "+(answer[0]*-1)+"<br>"+"x<sub>2</sub> = "+answer[1];
+        opt3 = "x<sub>1</sub> = " + answer[0]+"<br>"+"x<sub>2</sub> = "+(answer[1]+1);
+        opt4 = "x<sub>1</sub> = " + (answer[0]*-1)+"<br>"+"x<sub>2</sub> = "+(answer[1]-1);
+    } else if(answer[0] === (answer[1]*-1)) {
+        opt2 = "x<sub>1</sub> = " + (answer[0] - 1) + "<br>" + "x<sub>2</sub> = " + (answer[1] + 1);
+        opt3 = "x<sub>1</sub> = " + (answer[0] + 1) + "<br>" + "x<sub>2</sub> = " + (answer[1] - 1);
+        opt4 = "x<sub>1</sub> = " + answer[0] + "<br>" + "x<sub>2</sub> = " + (answer[1] * 2);
+    } else if(answer[0] === answer[1]){
+        opt2 = "x<sub>1</sub> = "+(answer[0]*-1)+"<br>"+"x<sub>2</sub> = "+(answer[1]*-1);
+        opt3 = "x<sub>1</sub> = "+answer[0]+"<br>"+"x<sub>2</sub> = "+(answer[1]*-1);
+        opt4 = "x<sub>1</sub> = " + (answer[0]*2) + "<br>" + "x<sub>2</sub> = " + (answer[1] * 2);
+    } else {
+        opt2 = "x<sub>1</sub> = "+(answer[0]*-1)+"<br>"+"x<sub>2</sub> = "+answer[1];
+        opt3 = "x<sub>1</sub> = "+answer[0]+"<br>"+"x<sub>2</sub> = "+(answer[1]*-1);
+        opt4 = "x<sub>1</sub> = "+(answer[0]*-1)+"<br>"+"x<sub>2</sub> = "+(answer[1]*-1);
+    }
     return [opt1 , opt2 , opt3 , opt4];
 }
 
@@ -406,11 +432,26 @@ function showOptions(array){
 }
 
 function countdownTimer(){
-    let countDownDate = new Date().getTime()+101000;
+    let countDownDate = new Date().getTime() + 101000;
+    let flag = false;
+    let now , end , addTime , distance , seconds , temp;
     let x = setInterval(function() {
-        let now = new Date().getTime();
-        let distance = countDownDate - now;
-        let seconds = Math.floor((distance % (1000 * 60 * 60)) / 1000);
+        now = new Date().getTime();
+        if(flag){
+            countDownDate -= (temp-1000);
+            flag=false;
+        }
+        end = countDownDate;
+        addTime = TimeModifier(correctAnswers) - TimeModifier(wrongAnswers);
+        distance = end - now;
+        distance += addTime;
+        if(distance > 100000){
+            temp = distance-100000;
+            distance-=temp;
+            flag = true;
+        }
+        seconds = Math.floor((distance % (1000 * 60 * 60)) / 1000);
+        localStorage.setItem("currentTime", distance);
         document.getElementById("demo").innerHTML =seconds+" ثانیه ";
         if (distance < 0) {
             clearInterval(x);
@@ -421,20 +462,78 @@ function countdownTimer(){
 }
 
 function finish(){
+    document.getElementById("myProgress").style.display = "none";
     let score = (correctAnswers*3)-(wrongAnswers);
     document.querySelector("#start").disabled = false;
     document.querySelector("#jump").disabled = true;
     document.querySelector("#question1").innerHTML = "سوال"
     let options = document.querySelectorAll(".option");
-    for (let option of options) {
-        option.innerHTML="?";
-    }
-    const optionButtons = document.querySelectorAll(".option");
-    for (let x of optionButtons) {
+    options[0].innerHTML = "گزینه 1";
+    options[1].innerHTML = "گزینه 2";
+    options[2].innerHTML = "گزینه 3";
+    options[3].innerHTML = "گزینه 4";
+    for (let x of options) {
         x.disabled = true;
     }
     correctAnswers = 0;
     wrongAnswers = 0;
     emptyAnswers = 0;
     document.querySelector("#score").innerHTML = score.toString();
+}
+
+function TimeModifier(count) {
+    return (count * 10000);
+}
+
+function timeBarProgress() {
+        let x = setInterval(function (){
+            let elem = document.getElementById("myBar");
+            let currentTime = Math.floor(localStorage.getItem("currentTime") / 1000);
+            let width = currentTime;
+            if(width>0){
+                document.getElementById('levelSound').play();
+                if (width > 100) {
+                    width = 100;
+                    document.getElementById('levelSound').playbackRate = 1;
+                }else if(width > 50){
+                    elem.style.backgroundColor = "green";
+                    //document.getElementById('levelSound').play();
+                    document.getElementById('levelSound').playbackRate = 1;
+                } else if (width >=25){
+                    elem.style.backgroundColor = "yellow";
+                    //document.getElementById('levelSound').play();
+                    document.getElementById('levelSound').playbackRate = 1.3;
+                } else if (width >=10){
+                    elem.style.backgroundColor = "orange";
+                    //document.getElementById('levelSound').play();
+                    document.getElementById('levelSound').playbackRate = 1.7;
+                } else if (width < 10){
+                    elem.style.backgroundColor = "red";
+                    //document.getElementById('levelSound').play();
+                    document.getElementById('levelSound').playbackRate = 2;
+                }
+                document.getElementById("myProgress").style.display = "block";
+                elem.style.width = width + "%";
+                elem.innerHTML = currentTime + "%";
+            }else {
+                document.getElementById("losingSound").play();
+                document.getElementById("levelSound").pause();
+                clearInterval(x);
+            }
+        } , 1000);
+}
+
+function checkFraction(s , m){
+    let g = gcd(s,m);
+    if(m<0){
+        s *= -1;
+        m *= -1;
+    }
+    if(s % m === 0){
+        return s/m;
+    } else if(g !== 1){
+        s /= g;
+        m /= g;
+    }
+    return [s,m];
 }
